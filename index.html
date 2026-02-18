@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LANSIO.VIP</title>
+
+  <style>
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg,#f2f2f2,#e9eef6);
+      padding:30px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .wrap{
+      width:1100px;
+      background:white;
+      border-radius:20px;
+      padding:22px;
+      box-shadow:0 12px 40px rgba(0,0,0,0.12);
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:12px 16px;
+      border-radius:16px;
+      background: linear-gradient(90deg,#111,#333);
+      color:white;
+      font-weight:800;
+      font-size:22px;
+      letter-spacing:2px;
+    }
+
+    .topbar span{
+      font-size:13px;
+      font-weight:500;
+      opacity:0.7;
+      letter-spacing:1px;
+    }
+
+    .layout{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns: 420px 1fr;
+      gap:22px;
+      align-items:flex-start;
+    }
+
+    .panel{
+      border-radius:18px;
+      padding:18px;
+      background: linear-gradient(180deg,#fbfbfb,#f0f0f0);
+      border:1px solid rgba(0,0,0,0.08);
+      box-shadow:0 8px 25px rgba(0,0,0,0.06);
+      min-height:520px;
+    }
+
+    .panel-title{
+      font-size:13px;
+      font-weight:700;
+      opacity:0.65;
+      margin-bottom:12px;
+      letter-spacing:1px;
+      text-transform:uppercase;
+    }
+
+    .casio{
+      border-radius:22px;
+      padding:18px;
+      background: linear-gradient(180deg,#1a1a1a,#0c0c0c);
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,0.06),
+                  0 18px 50px rgba(0,0,0,0.35);
+      color:white;
+    }
+
+    .casio-brand{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:10px;
+    }
+
+    .casio-brand .name{
+      font-weight:900;
+      letter-spacing:2px;
+      font-size:16px;
+    }
+
+    .casio-brand .model{
+      font-size:11px;
+      opacity:0.6;
+      letter-spacing:1px;
+    }
+
+    .casio-screen{
+      background: linear-gradient(180deg,#d8f0d2,#bde7b2);
+      border-radius:14px;
+      padding:12px;
+      box-shadow: inset 0 0 0 2px rgba(0,0,0,0.08);
+      color:#111;
+      font-family: "Courier New", monospace;
+      overflow:hidden;
+    }
+
+    .casio-history{
+      height:18px;
+      font-size:13px;
+      opacity:0.7;
+      text-align:right;
+      white-space:nowrap;
+      overflow:hidden;
+    }
+
+    .casio-main{
+      margin-top:4px;
+      height:44px;
+      font-size:26px;
+      font-weight:700;
+      text-align:right;
+      white-space:nowrap;
+      overflow:hidden;
+    }
+
+    .keys{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:10px;
+    }
+
+    .btn{
+      border:none;
+      border-radius:12px;
+      padding:14px 0;
+      font-size:16px;
+      font-weight:800;
+      cursor:pointer;
+      transition: transform .08s ease, filter .15s ease;
+      box-shadow:0 6px 14px rgba(0,0,0,0.25);
+      user-select:none;
+    }
+
+    .btn:active{
+      transform: scale(0.96);
+      filter: brightness(0.85);
+    }
+
+    .btn.num{
+      background: linear-gradient(180deg,#eaeaea,#cfcfcf);
+      color:#111;
+    }
+
+    .btn.op{
+      background: linear-gradient(180deg,#ffb84d,#ff8c1a);
+      color:#111;
+    }
+
+    .btn.eq{
+      background: linear-gradient(180deg,#3aff84,#18c95b);
+      color:#111;
+      grid-column: span 2;
+    }
+
+    .btn.ac{
+      background: linear-gradient(180deg,#ff5252,#d60000);
+      color:white;
+    }
+
+    .btn.del{
+      background: linear-gradient(180deg,#666,#333);
+      color:white;
+    }
+
+    .btn.zero{
+      grid-column: span 2;
+    }
+
+    .result-wrap{
+      display:flex;
+      justify-content:center;
+      padding-top:20px;
+    }
+
+    .calc{
+      font-family:"Times New Roman", serif;
+      font-size:26px;
+      line-height:1.28;
+      white-space:pre;
+      text-align:right;
+      padding:10px 14px;
+      display:inline-block;
+      color:#111;
+    }
+
+    .line{
+      border-top:2px solid black;
+      margin:4px 0;
+    }
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+  <div class="topbar">
+    LANSIO.VIP
+    <span>SMART CALCULATOR</span>
+  </div>
+
+  <div class="layout">
+    <div class="panel">
+      <div class="panel-title">MÁY TÍNH</div>
+
+      <div class="casio">
+        <div class="casio-brand">
+          <div class="name">CASIO</div>
+          <div class="model">fx-580VN</div>
+        </div>
+
+        <div class="casio-screen">
+          <div id="casioHistory" class="casio-history"></div>
+          <div id="casioMain" class="casio-main">0</div>
+        </div>
+
+        <div class="keys">
+          <button class="btn ac" onclick="pressAC()">AC</button>
+          <button class="btn del" onclick="pressDEL()">DEL</button>
+          <button class="btn op" onclick="pressOp('/')">÷</button>
+          <button class="btn op" onclick="pressOp('*')">×</button>
+
+          <button class="btn num" onclick="pressNum('7')">7</button>
+          <button class="btn num" onclick="pressNum('8')">8</button>
+          <button class="btn num" onclick="pressNum('9')">9</button>
+          <button class="btn op" onclick="pressOp('-')">−</button>
+
+          <button class="btn num" onclick="pressNum('4')">4</button>
+          <button class="btn num" onclick="pressNum('5')">5</button>
+          <button class="btn num" onclick="pressNum('6')">6</button>
+          <button class="btn op" onclick="pressOp('+')">+</button>
+
+          <button class="btn num" onclick="pressNum('1')">1</button>
+          <button class="btn num" onclick="pressNum('2')">2</button>
+          <button class="btn num" onclick="pressNum('3')">3</button>
+          <button class="btn eq" onclick="pressEQ()">=</button>
+
+          <button class="btn num zero" onclick="pressNum('0')">0</button>
+          <button class="btn num" onclick="pressNum('00')">00</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">ĐẶT TÍNH</div>
+      <div class="result-wrap">
+        <div id="result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;">
+  <a href="https://sub.thangle.io.vn" rel="dofollow" title="Tạo subdomain miễn phí">Tạo subdomain miễn phí - ThangLeDev</a>
+</div>
+
+<script>
+let expr = "";
+
+function stripLeadingZeros(s){
+  s = String(s);
+  s = s.replace(/^0+/, "");
+  return s === "" ? "0" : s;
+}
+
+function formatNumberWithSpaces(n){
+  n = String(n);
+  return n.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+
+function padLeft(s, n){
+  s = String(s);
+  while(s.length < n) s = " " + s;
+  return s;
+}
+
+function parseExpr(raw){
+  raw = raw.replace(/\s+/g, "");
+  let m = raw.match(/^(\d+)([\+\-\*\/])(\d+)$/);
+  if(!m) return null;
+  return {a: stripLeadingZeros(m[1]), op: m[2], b: stripLeadingZeros(m[3])};
+}
+
+function updateScreen(){
+  let casioMain = document.getElementById("casioMain");
+  let casioHistory = document.getElementById("casioHistory");
+
+  if(expr === ""){
+    casioMain.textContent = "0";
+    casioHistory.textContent = "";
+    document.getElementById("result").innerHTML = "";
+    return;
+  }
+
+  casioMain.textContent = expr
+    .replace(/\*/g,"×")
+    .replace(/\//g,"÷");
+
+  casioHistory.textContent = "LANSIO.VIP";
+}
+
+function pressNum(n){
+  expr += n;
+  updateScreen();
+}
+
+function pressOp(op){
+  if(expr === "") return;
+  if(/[+\-*/]$/.test(expr)) expr = expr.slice(0,-1);
+  expr += op;
+  updateScreen();
+}
+
+function pressDEL(){
+  expr = expr.slice(0,-1);
+  updateScreen();
+}
+
+function pressAC(){
+  expr = "";
+  updateScreen();
+}
+
+function solveAdd(a,b){
+  let A = BigInt(a), B = BigInt(b);
+  let sum = (A+B).toString();
+  let w = Math.max(a.length, b.length+2, sum.length);
+
+  return `
+<div class="calc">
+${padLeft(formatNumberWithSpaces(a), w)}
+${padLeft("+ " + formatNumberWithSpaces(b), w)}
+<div class="line"></div>
+${padLeft(formatNumberWithSpaces(sum), w)}
+</div>`;
+}
+
+function solveSub(a,b){
+  let A = BigInt(a), B = BigInt(b);
+  let diff = (A-B).toString();
+  let w = Math.max(a.length, b.length+2, diff.length);
+
+  return `
+<div class="calc">
+${padLeft(formatNumberWithSpaces(a), w)}
+${padLeft("- " + formatNumberWithSpaces(b), w)}
+<div class="line"></div>
+${padLeft(formatNumberWithSpaces(diff), w)}
+</div>`;
+}
+
+function solveMul(a,b){
+  let A = BigInt(a);
+  let B = BigInt(b);
+  let product = (A*B).toString();
+
+  let digits = b.split("").reverse();
+  let partials = [];
+
+  for(let i=0;i<digits.length;i++){
+    let d = BigInt(digits[i]);
+    let part = (A*d).toString();
+    partials.push({val: part, shift: i});
+  }
+
+  let w = Math.max(
+    a.length,
+    b.length + 2,
+    product.length,
+    ...partials.map(p => p.val.length + p.shift)
+  );
+
+  let html = `<div class="calc">\n`;
+  html += `${padLeft(formatNumberWithSpaces(a), w)}\n`;
+  html += `${padLeft("× " + formatNumberWithSpaces(b), w)}\n`;
+  html += `<div class="line"></div>\n`;
+
+  if(partials.length === 1){
+    html += `${padLeft(formatNumberWithSpaces(product), w)}\n`;
+    html += `</div>`;
+    return html;
+  }
+
+  for(let p of partials){
+    let base = padLeft(p.val, product.length);
+    let shifted = base + " ".repeat(p.shift);
+    html += `${padLeft(formatNumberWithSpaces(shifted), w)}\n`;
+  }
+
+  html += `<div class="line"></div>\n`;
+  html += `${padLeft(formatNumberWithSpaces(product), w)}\n`;
+  html += `</div>`;
+  return html;
+}
+
+function solveDiv(a,b){
+  let dividend = BigInt(a);
+  let divisor = BigInt(b);
+
+  if(divisor === 0n) return `<div class="calc">Không thể chia cho 0</div>`;
+
+  let q = (dividend / divisor).toString();
+  let aStr = a;
+  let bStr = b;
+
+  let steps = [];
+  let current = "";
+  let temp = 0n;
+
+  for(let i=0;i<aStr.length;i++){
+    current += aStr[i];
+    current = stripLeadingZeros(current);
+    temp = BigInt(current);
+
+    if(temp < divisor) continue;
+
+    let digit = temp / divisor;
+    let mul = digit * divisor;
+    let rem = temp - mul;
+
+    steps.push({
+      pos: i,
+      mul: mul.toString(),
+      rem: rem.toString()
+    });
+
+    current = rem.toString();
+  }
+
+  let leftWidth = aStr.length;
+  let firstLine = formatNumberWithSpaces(bStr) + " ) " + padLeft(formatNumberWithSpaces(aStr), leftWidth);
+  let secondLine = " ".repeat(bStr.length + 3) + padLeft(formatNumberWithSpaces(q), leftWidth);
+  let bar = " ".repeat(bStr.length + 3) + "-".repeat(leftWidth);
+
+  let body = "";
+  for(let s of steps){
+    let start = (bStr.length + 3) + (s.pos + 1 - s.mul.length);
+    body += " ".repeat(start) + formatNumberWithSpaces(s.mul) + "\n";
+    body += " ".repeat(start) + "-".repeat(s.mul.length) + "\n";
+    let start2 = (bStr.length + 3) + (s.pos + 1 - s.rem.length);
+    body += " ".repeat(start2) + formatNumberWithSpaces(s.rem) + "\n";
+  }
+
+  return `
+<div class="calc">
+${firstLine}
+${secondLine}
+${bar}
+${body.trimEnd()}
+</div>`;
+}
+
+function pressEQ(){
+  let parsed = parseExpr(expr);
+  let casioHistory = document.getElementById("casioHistory");
+  let casioMain = document.getElementById("casioMain");
+  let res = document.getElementById("result");
+
+  if(!parsed){
+    casioHistory.textContent = "ERROR";
+    casioMain.textContent = "SYNTAX";
+    res.innerHTML = "";
+    return;
+  }
+
+  let {a,op,b} = parsed;
+  let A = BigInt(a);
+  let B = BigInt(b);
+  let ans = "";
+
+  if(op === "+"){
+    ans = (A+B).toString();
+    res.innerHTML = solveAdd(a,b);
+  }
+  else if(op === "-"){
+    ans = (A-B).toString();
+    res.innerHTML = solveSub(a,b);
+  }
+  else if(op === "*"){
+    ans = (A*B).toString();
+    res.innerHTML = solveMul(a,b);
+  }
+  else if(op === "/"){
+    ans = (A/B).toString();
+    res.innerHTML = solveDiv(a,b);
+  }
+
+  casioHistory.textContent = `${formatNumberWithSpaces(a)} ${op.replace("*","×").replace("/","÷")} ${formatNumberWithSpaces(b)}`;
+  casioMain.textContent = formatNumberWithSpaces(ans);
+
+  expr = ans;
+}
+
+document.addEventListener("keydown", (e)=>{
+  if(e.key >= "0" && e.key <= "9") pressNum(e.key);
+  if(e.key === "+") pressOp("+");
+  if(e.key === "-") pressOp("-");
+  if(e.key === "*") pressOp("*");
+  if(e.key === "/") pressOp("/");
+  if(e.key === "Backspace") pressDEL();
+  if(e.key === "Enter") pressEQ();
+  if(e.key === "Escape") pressAC();
+});
+
+function hideSeoDiv(){
+  let divs = document.querySelectorAll("div");
+  for(let d of divs){
+    let a = d.querySelector("a[href='https://sub.thangle.io.vn']");
+    if(a){
+      d.style.display = "none";
+      d.style.visibility = "hidden";
+      d.style.opacity = "0";
+      d.style.pointerEvents = "none";
+    }
+  }
+}
+
+hideSeoDiv();
+
+new MutationObserver(()=>{
+  hideSeoDiv();
+}).observe(document.body, {childList:true, subtree:true});
+
+updateScreen();
+</script>
+</body>
+</html>
