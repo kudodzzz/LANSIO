@@ -407,29 +407,37 @@ function solveMul(a,b){
 }
 
 function solveDiv(a,b){
-  let dividend = BigInt(a);
+  let dividendStr = a;
   let divisor = BigInt(b);
 
   if(divisor === 0n) return `<div class="calc">Không thể chia cho 0</div>`;
 
-  let q = (dividend / divisor).toString();
-  let aStr = a;
-  let bStr = b;
+  let dividend = BigInt(a);
+  let quotient = (dividend / divisor).toString();
 
   let steps = [];
   let current = "";
-  let temp = 0n;
 
-  for(let i=0;i<aStr.length;i++){
-    current += aStr[i];
+  for(let i=0;i<dividendStr.length;i++){
+    current += dividendStr[i];
     current = stripLeadingZeros(current);
-    temp = BigInt(current);
 
-    if(temp < divisor) continue;
+    let curVal = BigInt(current);
 
-    let digit = temp / divisor;
+    if(curVal < divisor){
+      if(steps.length > 0){
+        steps.push({
+          pos: i,
+          mul: "",
+          rem: current
+        });
+      }
+      continue;
+    }
+
+    let digit = curVal / divisor;
     let mul = digit * divisor;
-    let rem = temp - mul;
+    let rem = curVal - mul;
 
     steps.push({
       pos: i,
@@ -440,18 +448,31 @@ function solveDiv(a,b){
     current = rem.toString();
   }
 
-  let leftWidth = aStr.length;
-  let firstLine = formatNumberWithSpaces(bStr) + " ) " + padLeft(formatNumberWithSpaces(aStr), leftWidth);
-  let secondLine = " ".repeat(bStr.length + 3) + padLeft(formatNumberWithSpaces(q), leftWidth);
-  let bar = " ".repeat(bStr.length + 3) + "-".repeat(leftWidth);
+  let leftPad = b.length + 3;
+  let firstLine = `${formatNumberWithSpaces(b)} ) ${formatNumberWithSpaces(a)}`;
+  let secondLine = " ".repeat(leftPad) + padLeft(formatNumberWithSpaces(quotient), a.length);
+  let bar = " ".repeat(leftPad) + "-".repeat(a.length);
 
   let body = "";
+
+  let prevPos = -1;
+  let prevRem = "";
+
   for(let s of steps){
-    let start = (bStr.length + 3) + (s.pos + 1 - s.mul.length);
-    body += " ".repeat(start) + formatNumberWithSpaces(s.mul) + "\n";
-    body += " ".repeat(start) + "-".repeat(s.mul.length) + "\n";
-    let start2 = (bStr.length + 3) + (s.pos + 1 - s.rem.length);
-    body += " ".repeat(start2) + formatNumberWithSpaces(s.rem) + "\n";
+    if(s.mul === "") continue;
+
+    let mulStr = s.mul;
+    let remStr = s.rem;
+
+    let mulStart = leftPad + (s.pos + 1 - mulStr.length);
+    let remStart = leftPad + (s.pos + 1 - remStr.length);
+
+    body += " ".repeat(mulStart) + formatNumberWithSpaces(mulStr) + "\n";
+    body += " ".repeat(mulStart) + "-".repeat(mulStr.length) + "\n";
+    body += " ".repeat(remStart) + formatNumberWithSpaces(remStr) + "\n";
+
+    prevPos = s.pos;
+    prevRem = remStr;
   }
 
   return `
@@ -462,6 +483,7 @@ ${bar}
 ${body.trimEnd()}
 </div>`;
 }
+
 
 function pressEQ(){
   let parsed = parseExpr(expr);
